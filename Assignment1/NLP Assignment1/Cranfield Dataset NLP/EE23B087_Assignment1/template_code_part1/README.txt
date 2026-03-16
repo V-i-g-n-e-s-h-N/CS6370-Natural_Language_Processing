@@ -54,7 +54,7 @@ util.py
 How to Run
 ----------
 
-From inside template_code_part1:
+From inside template_code_part1 (use python or python3 as needed): 
 
 If cranfield folder is inside the same parent directory:
 
@@ -107,7 +107,6 @@ Download spaCy model:
     python -m spacy download en_core_web_sm
 
 Otherwise, you can use - pip install -r requirements.txt 
-The individual files also have these installations done quietly. 
 
 
 Notes
