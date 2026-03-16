@@ -4,7 +4,6 @@ import nltk
 from nltk.corpus import stopwords
 from collections import Counter
 
-# --- DEFENSIVE PROGRAMMING ---
 nltk.download('stopwords', quiet=True)
 
 class StopwordRemoval():
