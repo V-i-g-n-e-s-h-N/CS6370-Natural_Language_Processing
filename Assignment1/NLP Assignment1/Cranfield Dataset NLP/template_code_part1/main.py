@@ -3,6 +3,7 @@ from tokenization import Tokenization
 from inflectionReduction import InflectionReduction
 from stopwordRemoval import StopwordRemoval
 
+import nltk
 import argparse
 import json
 import os
@@ -22,6 +23,17 @@ else:
 
 
 class SearchEngine:
+	"""
+	The flow of preprocessing we are following is:
+	1. Loading documents and queries
+	2. Sentence segmentation of both documents and queries using the same segmenter - default spaCy
+	3. Tokenization of both documents and queries using the same tokenizer - default spaCy
+	4. Reducing inflections and derivations using the same method - default WordNet lemmatization
+	5. Stopword removal using the stopword list defined in NLTK
+
+	Once all this is done, documents and queries can be compared using the TF-IDF matrix and retrieval can be done in different ways
+	The retrieval and its evaluation will be done in part B perhaps. 
+	"""
 
 	def __init__(self, args):
 		self.args = args
@@ -39,19 +51,22 @@ class SearchEngine:
 			return self.sentenceSegmenter.naive(text)
 		elif self.args.segmenter == "punkt":
 			return self.sentenceSegmenter.punkt(text)
+		elif self.args.segmenter == "spacy":
+			return self.sentenceSegmenter.spacySegmenter(text)
 
 	def tokenize(self, text):
 		if self.args.tokenizer == "naive":
 			return self.tokenizer.naive(text)
 		elif self.args.tokenizer == "ptb":
 			return self.tokenizer.pennTreeBank(text)
+		elif self.args.tokenizer == "spacy":
+			return self.tokenizer.spacyTokenizer(text)
 
 	def reduceInflection(self, text):
 		return self.inflectionReducer.reduce(text)
 
 	def removeStopwords(self, text):
 		return self.stopwordRemover.fromList(text)
-
 
 	def preprocessQueries(self, queries):
 
@@ -163,11 +178,11 @@ if __name__ == "__main__":
 	parser.add_argument('-out_folder', default="output",
 						help="Path to output folder")
 
-	parser.add_argument('-segmenter', default="punkt",
-	                    help="Sentence Segmenter Type [naive|punkt]")
+	parser.add_argument('-segmenter', default="spacy",
+	                    help="Sentence Segmenter Type [naive|punkt|spacy]")
 
-	parser.add_argument('-tokenizer', default="ptb",
-	                    help="Tokenizer Type [naive|ptb]")
+	parser.add_argument('-tokenizer', default="spacy",
+	                    help="Tokenizer Type [naive|ptb|spacy]")
 
 	parser.add_argument('-custom', action="store_true",
 						help="Take custom query as input")
