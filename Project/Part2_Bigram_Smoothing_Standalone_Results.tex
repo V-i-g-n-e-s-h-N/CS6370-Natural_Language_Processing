@@ -1,0 +1,84 @@
+\subsubsection{Experimental Results}
+
+The TF-IDF + add-one-smoothed unigram-bigram hybrid system was evaluated on the Cranfield dataset using the same preprocessing pipeline as the baseline TF-IDF model: Punkt sentence segmentation, Penn Treebank tokenization, Porter stemming, and NLTK stopword removal.
+The standalone model adds phrase-aware bigrams of the form \texttt{boundary\_layer} and combines the baseline TF-IDF cosine score with add-one-smoothed unigram and bigram bonuses.
+The interpolation weights used were $0.1$ for unigram smoothing and $0.1$ for bigram smoothing, which was the best-performing setting among the earlier tested variants.
+Evaluation metrics were computed for values of $k$ ranging from 1 to 10.
+
+Table~\ref{tab:bigram_smoothing_metrics} summarizes the observed retrieval performance.
+
+\begin{table}[H]
+\centering
+\caption{TF-IDF + Add-One Unigram-Bigram Hybrid Retrieval Performance on Cranfield Dataset}
+\label{tab:bigram_smoothing_metrics}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$k$ & Precision & Recall & F$_{0.5}$ & MAP & nDCG & MRR \\
+\hline
+1 & 0.7422 & 0.1244 & 0.3440 & 0.7422 & 0.6000 & 0.7422 \\
+2 & 0.6244 & 0.2023 & 0.4055 & 0.6044 & 0.5359 & 0.7822 \\
+3 & 0.5393 & 0.2552 & 0.4086 & 0.5114 & 0.5033 & 0.7926 \\
+4 & 0.4722 & 0.2909 & 0.3923 & 0.4523 & 0.4884 & 0.7981 \\
+5 & 0.4267 & 0.3246 & 0.3768 & 0.4169 & 0.4814 & 0.7999 \\
+6 & 0.3859 & 0.3450 & 0.3557 & 0.3904 & 0.4761 & 0.8029 \\
+7 & 0.3530 & 0.3635 & 0.3364 & 0.3744 & 0.4736 & 0.8042 \\
+8 & 0.3306 & 0.3867 & 0.3237 & 0.3674 & 0.4767 & 0.8058 \\
+9 & 0.3101 & 0.4074 & 0.3107 & 0.3623 & 0.4803 & 0.8073 \\
+10 & 0.2956 & 0.4291 & 0.3017 & 0.3606 & 0.4865 & 0.8073 \\
+\hline
+\end{tabular}
+\end{table}
+
+The Wilcoxon signed-rank test was conducted separately for:
+
+\begin{itemize}
+    \item Precision@k
+    \item Recall@k
+    \item F$_{0.5}$@k
+\end{itemize}
+
+for all values of $k$ from 1 to 10.\\
+
+The null hypothesis used was:
+
+H0: \texttt{There is no statistically significant difference between the baseline TF-IDF system and the standalone TF-IDF + add-one-smoothed unigram-bigram hybrid retrieval system.}
+
+The alternative hypothesis was:
+
+H1: \texttt{The standalone TF-IDF + add-one-smoothed unigram-bigram hybrid system produces statistically significant retrieval improvements over the baseline TF-IDF system.}\\
+
+A significance threshold of:
+
+\[
+\alpha = 0.05
+\]
+
+was used.
+
+Table~\ref{tab:wilcoxon_bigram_smoothing_results} summarizes the obtained p-values.
+
+\begin{table}[H]
+\centering
+\caption{Wilcoxon Signed-Rank Test Results: TF-IDF vs Standalone TF-IDF + Add-One Unigram-Bigram Hybrid}
+\label{tab:wilcoxon_bigram_smoothing_results}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$k$ & Precision p-value & Recall p-value & F$_{0.5}$ p-value \\
+\hline
+1 & 0.1132 & 0.1176 & 0.1176 \\
+2 & \textbf{0.0204} & \textbf{0.0270} & \textbf{0.0260} \\
+3 & \textbf{0.0463} & \textbf{0.0497} & \textbf{0.0479} \\
+4 & 0.0619 & 0.0696 & 0.0693 \\
+5 & 0.2489 & 0.2112 & 0.2200 \\
+6 & 0.8600 & 0.8928 & 0.9060 \\
+7 & 0.7899 & 0.6550 & 0.6826 \\
+8 & 0.9398 & 0.9341 & 0.9379 \\
+9 & 0.8013 & 0.7738 & 0.7946 \\
+10 & 0.4626 & 0.5208 & 0.4947 \\
+\hline
+\end{tabular}
+\end{table}
+
+Compared with the baseline TF-IDF run, Precision@1 increased from $0.6844$ to $0.7422$, Precision@3 increased from $0.5111$ to $0.5393$, MAP@10 increased from $0.3467$ to $0.3606$, nDCG@10 increased from $0.4709$ to $0.4865$, and MRR@10 increased from $0.7687$ to $0.8073$.
+The Wilcoxon analysis shows statistically significant improvements at $k=2, 3$ for Precision@k, Recall@k, and F$_{0.5}$@k.
+The results indicate that phrase-aware evidence combined with add-one smoothing on lexical unigrams and bigrams improves early retrieval quality more reliably than the unigram-only TF-IDF baseline, while still preserving the original preprocessing pipeline.

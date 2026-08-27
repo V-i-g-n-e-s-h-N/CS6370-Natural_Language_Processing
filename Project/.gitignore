@@ -1,0 +1,19 @@
+.venv/
+venv/
+env/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.DS_Store
+Thumbs.db
+
+# Keep the output folder but avoid committing large intermediate dumps.
+output/**/*.txt
+models/
+cc.en.300.bin
+cc.en.300.bin.gz
+# Uncomment if you do not want plots in git:
+# output/*.png
